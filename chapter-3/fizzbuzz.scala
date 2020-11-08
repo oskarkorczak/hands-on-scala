@@ -24,3 +24,30 @@ val fizzbuzz = for (i <- Range.inclusive(0, 100)) yield {
 }
 println(fizzbuzz)
 
+println("\nFlexible fizzbuzz")
+def flexibleFizzBuzz(f: String => Unit): Any = {
+    val items = for (i <- Range.inclusive(0, 100)) yield {
+          if (i % 3 == 0 && i % 5 == 0) "FizzBuzz"
+          else if (i % 3 == 0) "Fizz"
+          else if (i % 5 == 0) "Buzz"
+          else i.toString()
+      }
+
+    for (item <- items) {
+      f(item)
+    }
+}
+println("\nDo nothing")
+flexibleFizzBuzz(s => {} /* do nothing */)
+
+println("\nPrint to console")
+flexibleFizzBuzz(s => println(s))
+
+println("\nStore results in the array")
+var i = 0
+val output = new Array[String](101)
+flexibleFizzBuzz {s =>
+  output(i) = s
+  i += 1
+}
+for (o <- output) println(o)
