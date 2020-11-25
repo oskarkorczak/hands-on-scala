@@ -8,27 +8,27 @@ def stringify(expr: Expression): String = {
   expr match {
     case Literal(value: Int) => value.toString
     case Variable(name: String) => name
-    case BinOp(l: Expression, op: String, r: Expression) => s"${stringify(l)} $op ${stringify(r)}"
+    case BinOp(l: Expression, op: String, r: Expression) => s"(${stringify(l)} $op ${stringify(r)})"
   }
 }
 
 // x + 1
-val xPlus1 = BinOp(Variable("x"), "+", Literal(1))
+val exp1 = BinOp(Variable("x"), "+", Literal(1))
 
 // x * (y - 1)
-val semiComplex = BinOp(
+val exp2 = BinOp(
   Variable("x"),
   "*",
   BinOp(Variable("y"), "-", Literal(1))
 )
 
 // (x + 1) * (y - 1)
-val complex = BinOp(
+val exp3 = BinOp(
   BinOp(Variable("x"), "+", Literal(1)),
   "*",
   BinOp(Variable("y"), "-", Literal(1))
 )
 
-println(stringify(xPlus1))
-println(stringify(semiComplex))
-println(stringify(complex))
+println(stringify(exp1))
+println(stringify(exp2))
+println(stringify(exp3))
