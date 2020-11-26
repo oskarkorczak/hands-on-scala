@@ -42,6 +42,7 @@ val myInt = ParseInt.parse(args(0))
 val myBoolean = ParseBoolean.parse(args(1))
 val myDouble = ParseDouble.parse(args(2))
 
+println("=" * 30)
 println(myInt)
 println(myBoolean)
 println(myDouble)
@@ -57,7 +58,39 @@ println(myDouble)
 
 def parseFromConsole[T](parser: StrParser[T]): T = parser.parse(scala.Console.in.readLine())
 
-val myInt2 = parseFromConsole[Int](ParseInt)
-val myBoolean2 = parseFromConsole[Boolean](ParseBoolean)
-val myDouble2 = parseFromConsole[Double](ParseDouble)
+//val myInt2 = parseFromConsole[Int](ParseInt)
+//val myBoolean2 = parseFromConsole[Boolean](ParseBoolean)
+//val myDouble2 = parseFromConsole[Double](ParseDouble)
 
+
+/**
+ * Solution: Implicit parsers
+ */
+
+trait StringParser[T] { def parse(s:String): T }
+object StringParser {
+  implicit object IntParser extends StringParser[Int] {
+    override def parse(s: String): Int = s.toInt
+  }
+
+  implicit object BooleanParser extends StringParser[Boolean] {
+    override def parse(s: String): Boolean = s.toBoolean
+  }
+
+  implicit object DoubleParser extends StringParser[Double] {
+    override def parse(s: String): Double = s.toDouble
+  }
+}
+
+def parseFromString[T](s: String)(implicit parser: StringParser[T]): T = {
+  parser.parse(s)
+}
+
+val myInt3 = parseFromString[Int](args(0))
+val myBoolean3 = parseFromString[Boolean](args(1))
+val myDouble3 = parseFromString[Double](args(2))
+
+println("=" * 30)
+println(myInt3)
+println(myBoolean3)
+println(myDouble3)
