@@ -25,3 +25,21 @@ val args = Seq("123", "true", "7.5")
 //val myBoolean = parseFromString[Boolean](args(1))
 //val myDouble = parseFromString[Double](args(2))
 
+/**
+ * 2nd problem sketch utilises trait and its implementations, which is rather natural and works.
+ * However, this approach has another problem: what if developer wants to parse value coming from Console,
+ * not the string directly?
+ */
+
+trait StrParser[T] { def parse(s: String): T }
+object ParseInt extends StrParser[Int]  { override def parse(s: String): Int = s.toInt }
+object ParseBoolean extends StrParser[Boolean] { override def parse(s: String): Boolean = s.toBoolean }
+object ParseDouble extends StrParser[Double] { override def parse(s: String): Double = s.toDouble }
+
+val myInt = ParseInt.parse(args(0))
+val myBoolean = ParseBoolean.parse(args(1))
+val myDouble = ParseDouble.parse(args(2))
+
+println(myInt)
+println(myBoolean)
+println(myDouble)
