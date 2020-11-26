@@ -64,7 +64,10 @@ def parseFromConsole[T](parser: StrParser[T]): T = parser.parse(scala.Console.in
 
 
 /**
- * Solution: Implicit parsers
+ * Solution: Implicit parsers.
+ * This solution looks very similar to initial approach. It also allows to create other functions
+ * reading from different sources and using same parsers implicitly without passing around all the time
+ * same instance.
  */
 
 trait StringParser[T] { def parse(s:String): T }
@@ -94,3 +97,10 @@ println("=" * 30)
 println(myInt3)
 println(myBoolean3)
 println(myDouble3)
+
+
+def parseFromConsole2[T](implicit parser: StringParser[T]): T = {
+  parser.parse(scala.Console.in.readLine())
+}
+
+val consoleInt = parseFromConsole2[Int]
