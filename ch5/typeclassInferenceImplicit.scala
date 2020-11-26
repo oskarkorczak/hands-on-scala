@@ -102,15 +102,31 @@ println(myDouble3)
 def parseFromConsole2[T](implicit parser: StringParser[T]): T = {
   parser.parse(scala.Console.in.readLine())
 }
-
 val consoleInt = parseFromConsole2[Int]
 
+
+/** Recursive typeclass building allows to build more complex parsers based on already existing ones.
+ * Unlike previous `implicit objects` singletons, here we have an `implicit def`. Depending on type T,
+ * we would need a different StringParser[T], hence we need a different StringParser[Seq[T]].
+ * `implicit def ParseSeq` would return a different StringParser each time it is called with
+ * a different type T.
+ *
+ * Effectively compiler is taught how to produce a StringParser[Seq[T]] for any type T, as long as
+ * it has an implicit StringParsr[T] available.
+ */
+implicit def ParseSeq[T](implicit parser: StringParser[T]) =
+  new StringParser[Seq[T]] {
+    def parse(s: String) = s.split(',').toSeq.map(parser.parse)
+  }
+
+val mySeq = parseFromString[Seq[Boolean]]("true,false,true")
+println(mySeq)
 
 /**
  * Context-Bound syntax
  * Below regular syntax with (implicit parser: StrParser[T]) is common enough to have
  * a shorthand of parseFromAbc[T: StrParser].
- * Also function implementation is slightly different as on example below. 
+ * Also function implementation is slightly different as on example below.
  */
 
 def parseFromAbc[T](s: String)(implicit parser: StrParser[T]): T = { parser.parse(s) }
