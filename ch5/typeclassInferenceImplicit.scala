@@ -14,6 +14,7 @@ def bar(implicit foo: Foo) = foo.value + 10
  * types: Ints, Booleans, Doubles etc.
  */
 
+
 /**
  * 1st problem sketch, where it is rather impossible for `parseFromString` to know how to convert
  * the given String into an arbitrary T type.
@@ -24,6 +25,7 @@ val args = Seq("123", "true", "7.5")
 //val myInt = parseFromString[Int](args(0))
 //val myBoolean = parseFromString[Boolean](args(1))
 //val myDouble = parseFromString[Double](args(2))
+
 
 /**
  * 2nd problem sketch utilises trait and its implementations, which is rather natural and works.
@@ -43,3 +45,19 @@ val myDouble = ParseDouble.parse(args(2))
 println(myInt)
 println(myBoolean)
 println(myDouble)
+
+
+/**
+ * 3rd approach uses parseFromConsole function, which takes as parameter the StrParser.
+ * Now the problem is fact that we need pass StrParser implementations to all different
+ * kinds of parsing functions like: parseFromConsole, parseFromFile, parseFromNetwork etc.
+ * Another thing is that most likely there is a single ParseInt parser needed for all those functions.
+ * It is rather clumsy to pass it around all the time, even though it is still the same parser.
+ */
+
+def parseFromConsole[T](parser: StrParser[T]): T = parser.parse(scala.Console.in.readLine())
+
+val myInt2 = parseFromConsole[Int](ParseInt)
+val myBoolean2 = parseFromConsole[Boolean](ParseBoolean)
+val myDouble2 = parseFromConsole[Double](ParseDouble)
+
