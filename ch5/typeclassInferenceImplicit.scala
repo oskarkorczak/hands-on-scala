@@ -104,3 +104,14 @@ def parseFromConsole2[T](implicit parser: StringParser[T]): T = {
 }
 
 val consoleInt = parseFromConsole2[Int]
+
+
+/**
+ * Context-Bound syntax
+ * Below regular syntax with (implicit parser: StrParser[T]) is common enough to have
+ * a shorthand of parseFromAbc[T: StrParser].
+ * Also function implementation is slightly different as on example below. 
+ */
+
+def parseFromAbc[T](s: String)(implicit parser: StrParser[T]): T = { parser.parse(s) }
+def parseFromABC[T: StrParser](s: String): T = { implicitly[StrParser[T]].parse(s) }
