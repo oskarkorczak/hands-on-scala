@@ -1,7 +1,4 @@
-
-
 // By name param DEF :: def func(arg: => String) = ???
-
 
 // ===================
 // Avoiding evaluation
@@ -52,7 +49,6 @@ def retry[T](max: Int)(f: => T): T = {
 }
 
 
-// succeeds only with 200 response
 val res = retry(max = 5) {
   if(scala.util.Random.nextInt % 4 != 0) throw new RuntimeException("There was smth wrong")
   else 42
