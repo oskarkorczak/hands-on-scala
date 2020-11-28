@@ -48,3 +48,6 @@ class Trie() {
 
   println(s"Prefix matching: manible ${t.prefixesMatchingString("manible")}") // Set(3)
   println(s"Prefix matching: mangosteen ${t.prefixesMatchingString("mangosteen")}") // Set(3, 5)
+
+  val prefixes = t.prefixesMatchingString("mangosteen").map("mangosteen".substring(0, _))
+  println(s"Prefix words matching: mangosteen $prefixes") // Set("man", "mango")
