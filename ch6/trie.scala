@@ -21,7 +21,7 @@ class Trie() {
     current.exists(_.hasValue)
   }
 
-  def prefixesMatchingString(s: String): Set[Int] = {
+  def prefixesMatchingString0(s: String): Set[Int] = {
     var current = Option(root)
     val output = Set.newBuilder[Int]
     for((c, i) <- s.zipWithIndex if current.nonEmpty) {
@@ -30,6 +30,26 @@ class Trie() {
     }
     if(current.exists(_.hasValue)) output += s.length
     output.result()
+  }
+
+  def prefixesMatchingString(s: String): Set[String] = {
+    prefixesMatchingString0(s).map(s.substring(0, _))
+  }
+  def stringsMatchingPrefix(s: String): Set[String] = {
+    var current = Option(root)
+    for (c <- s if current.nonEmpty) current = current.get.children.get(c) // initial walk
+    if (current.isEmpty) Set()
+    else {
+      val output = Set.newBuilder[String]
+
+      def recurse(current: Node, path: List[Char]): Unit = {
+        if (current.hasValue) output += (s + path.reverse.mkString)
+        for ((c, n) <- current.children) recurse(n, c :: path)
+      }
+
+      recurse(current.get, Nil) // recursive walk
+      output.result()
+    }
   }
 }
 
@@ -46,8 +66,19 @@ class Trie() {
   println(s"Has mandarine: ${t.contains("mandarine")}") //false
 
 
-  println(s"Prefix matching: manible ${t.prefixesMatchingString("manible")}") // Set(3)
-  println(s"Prefix matching: mangosteen ${t.prefixesMatchingString("mangosteen")}") // Set(3, 5)
+  println(s"Prefix matching: manible ${t.prefixesMatchingString0("manible")}") // Set(3)
+  println(s"Prefix matching: mangosteen ${t.prefixesMatchingString0("mangosteen")}") // Set(3, 5)
 
-  val prefixes = t.prefixesMatchingString("mangosteen").map("mangosteen".substring(0, _))
-  println(s"Prefix words matching: mangosteen $prefixes") // Set("man", "mango")
+  // Set("man", "mango")
+  println(s"Prefix words matching: mangosteen ${t.prefixesMatchingString("mangosteen")}")
+
+  // Set("man", "mandarin", "mango")
+  println(s"Strings matching prefix: man ${t.stringsMatchingPrefix("man")}")
+  // Set("map", "man", "mandarin", "mango")
+  println(s"Strings matching prefix: man ${t.stringsMatchingPrefix("ma")}")
+  // Set("map")
+  println(s"Strings matching prefix: man ${t.stringsMatchingPrefix("map")}")
+  // Set("mandarin")
+  println(s"Strings matching prefix: man ${t.stringsMatchingPrefix("mand")}")
+  // Set()
+  println(s"Strings matching prefix: man ${t.stringsMatchingPrefix("mando")}")
