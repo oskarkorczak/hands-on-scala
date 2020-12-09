@@ -46,3 +46,34 @@ println(s"Graph: $graph2; search: $res2")
 
 val res3 = search("c", graph2)
 println(s"Graph: $graph2; search: $res3")
+
+// ==========================================
+
+/**
+ * Shortest Path
+ */
+
+def searchPaths[T](start: T, graph: Map[T, Seq[T]]): Map[T, List[T]] = {
+  val seen = collection.mutable.Map(start -> List(start))
+  val queue = collection.mutable.ArrayDeque(start -> List(start))
+  while (queue.nonEmpty) {
+    val (current, path) = queue.removeHead()
+    for (next <- graph(current) if !seen.contains(next)) {
+      val newPath = next :: path
+      seen(next) = newPath
+      queue.append((next, newPath))
+    }
+  }
+  seen.toMap
+}
+
+def shortestPath[T](start: T, dest: T, graph: Map[T, Seq[T]]): Seq[T] = {
+  val shortestPath = searchPaths(start, graph)
+  shortestPath(dest).reverse
+}
+
+val res4 = searchPaths("a", graph2)
+println(s"Graph: $graph2; search: $res4")
+
+val res5 = shortestPath("a", "d", graph2)
+println(s"Graph: $graph2; search: $res5")
